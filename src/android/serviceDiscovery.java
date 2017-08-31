@@ -26,6 +26,7 @@ public class serviceDiscovery extends CordovaPlugin {
                 options.put("urn", "tagfans-com:device:tbox:1");
                 options.put("time", 10);
             } catch(Exception e) {
+                callbackContext.success('fail');
                 e.printStackTrace();
                 return;
             }
@@ -42,8 +43,8 @@ public class serviceDiscovery extends CordovaPlugin {
 
             };
             task.execute(options);
-            return true;
         } else {
+            callbackContext.success('fail');
             return false;
         }
     }
