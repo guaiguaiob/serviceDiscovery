@@ -25,6 +25,7 @@ public class serviceDiscovery extends CordovaPlugin {
             try {
                 options.put("urn", "tagfans-com:device:tbox:1");
                 options.put("time", 10);
+                 callbackContext.success('true');
             } catch(Exception e) {
                 callbackContext.success('fail');
                 e.printStackTrace();
