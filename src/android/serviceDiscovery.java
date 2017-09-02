@@ -35,13 +35,11 @@ public class serviceDiscovery extends CordovaPlugin {
                 @Override
                 protected void onProgressUpdate(Integer... values) {
                     callbackContext.success("OK");
-                     return true;
                 }
 
                 @Override
                 protected void onPostExecute(HashSet<String> devices) {
                     callbackContext.success("OK");
-                     return true;
                 }
 
             };
@@ -49,6 +47,7 @@ public class serviceDiscovery extends CordovaPlugin {
         } else {
            
         }
+        return;
     }
 }
 
