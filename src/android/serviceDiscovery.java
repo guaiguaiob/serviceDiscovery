@@ -90,8 +90,7 @@ public class serviceDiscovery extends CordovaPlugin {
 
                         curTime = System.currentTimeMillis();
                         long diff = curTime - time;
-                        int percentage = (int)Math.ceil(diff*100/searchTime);
-                        publishProgress(percentage);
+
                         if(diff >= searchTime) {
                             break;
                         }
