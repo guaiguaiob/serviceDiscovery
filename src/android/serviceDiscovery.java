@@ -26,10 +26,8 @@ public class serviceDiscovery extends CordovaPlugin {
                 options.put("urn", "tagfans-com:device:tbox:1");
                 options.put("time", 10);
             } catch(Exception e) {
-                callbackContext.success('fail');
                 e.printStackTrace();
-                return;
-            }
+              }
             DevDiscovery task = new DevDiscovery(MainActivity.this) {
                 @Override
                 protected void onProgressUpdate(Integer... values) {
@@ -44,7 +42,6 @@ public class serviceDiscovery extends CordovaPlugin {
             };
             task.execute(options);
         } else {
-            callbackContext.success('fail');
             return false;
         }
     }
