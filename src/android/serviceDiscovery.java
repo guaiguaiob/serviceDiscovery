@@ -34,12 +34,12 @@ public class serviceDiscovery extends CordovaPlugin {
             DevDiscovery task = new DevDiscovery(cordova.getActivity()) {
                 @Override
                 protected void onProgressUpdate(Integer... values) {
-                    callbackContext.success('OK');
+                    callbackContext.success("OK");
                 }
 
                 @Override
                 protected void onPostExecute(HashSet<String> devices) {
-                    callbackContext.success('OK');
+                    callbackContext.success("OK");
                 }
 
             };
