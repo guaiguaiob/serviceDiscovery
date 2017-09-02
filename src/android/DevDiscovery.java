@@ -30,7 +30,7 @@ public class DevDiscovery extends AsyncTask<JSONObject, Integer, HashSet<String>
         int searchTime = 3; //seconds
         String urn = "ssdp:all";
 
-        java.util.Set<String> addresses = new HashSet<>();
+        addresses = new HashSet<String>();
         JSONObject options = params[0];
         try {
             if(options.has("urn")) {
