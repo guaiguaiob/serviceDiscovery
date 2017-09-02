@@ -82,7 +82,7 @@ public class serviceDiscovery extends CordovaPlugin {
                             socket.receive(p);
                             String s = new String(p.getData(), 0, p.getLength());
                             if (s.toUpperCase().equals("HTTP/1.1 200")) {
-                                address = (address.equals("")) ? address + "," + p.getAddress().getHostAddress() : p.getAddress().getHostAddress();
+                                address = (address.equals("")) ? p.getAddress().getHostAddress() : address + "," + p.getAddress().getHostAddress();
                                 //addresses.add(p.getAddress().getHostAddress());
                             }
                         } catch(java.net.SocketTimeoutException e) {
