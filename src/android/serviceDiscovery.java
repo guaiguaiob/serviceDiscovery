@@ -35,6 +35,7 @@ public class serviceDiscovery extends CordovaPlugin {
 
         if (action.equals("getNetworkServices")) {
             String urn = "urn:tagfans-com:device:tbox:1";
+            String address = "";
             int searchTime = 10;     
         //    HashSet<String> addresses=null;
             Context ctx = cordova.getActivity();
@@ -81,7 +82,7 @@ public class serviceDiscovery extends CordovaPlugin {
                             socket.receive(p);
                             String s = new String(p.getData(), 0, p.getLength());
                             if (s.toUpperCase().equals("HTTP/1.1 200")) {
-                                callbackContext.success(p.getAddress().getHostAddress());
+                                address = (address) ? address + "," + p.getAddress().getHostAddress() : p.getAddress().getHostAddress();
                                 //addresses.add(p.getAddress().getHostAddress());
                             }
                         } catch(java.net.SocketTimeoutException e) {
@@ -106,7 +107,7 @@ public class serviceDiscovery extends CordovaPlugin {
                 }
                 lock.release();
             }
-
+            callbackContext.success(address);
         } 
         return true;
     }
