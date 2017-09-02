@@ -31,7 +31,7 @@ public class serviceDiscovery extends CordovaPlugin {
             } catch(Exception e) {
                 e.printStackTrace();
               }
-            DevDiscovery task = new DevDiscovery(CordovaActivity.this) {
+            DevDiscovery task = new DevDiscovery(cordova.getActivity()) {
                 @Override
                 protected void onProgressUpdate(Integer... values) {
                     callbackContext.success(this.getDevices());
