@@ -17,6 +17,11 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+
+import com.google.gson.Gson;
+import android.annotation.SuppressLint;
+
 
 public class serviceDiscovery extends CordovaPlugin {
 
