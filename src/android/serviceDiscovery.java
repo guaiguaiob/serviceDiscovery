@@ -22,7 +22,7 @@ import java.util.HashSet;
 public class serviceDiscovery extends CordovaPlugin {
 
     @Override
-    public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) throws JSONException {
+    public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
          callbackContext.success(action);
         if (action.equals("getNetworkServices")) {
             callbackContext.success("getNetworkServices");
@@ -46,9 +46,7 @@ public class serviceDiscovery extends CordovaPlugin {
 
             };
             task.execute(options);
-        } else {
-           
-        }
+        } 
         return true;
     }
 }
