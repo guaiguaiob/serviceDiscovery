@@ -1,10 +1,10 @@
 /*global cordova, module*/
-var exec = cordova.require('cordova/exec');
-var serviceDiscovery = serviceDiscovery || {};
-module.exports = serviceDiscovery;
+var serviceDiscovery =  {};
 
 serviceDiscovery.getNetworkServices = function (successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "serviceDiscovery", "getNetworkServices", []);
+    cordova.exec(successCallback, errorCallback, "serviceDiscovery", "getNetworkServices", []);
     return true;
 };
+
+module.exports = serviceDiscovery;
 
