@@ -33,7 +33,7 @@ public class serviceDiscovery extends CordovaPlugin {
                 e.printStackTrace();
               }
               
-            DevDiscovery task = new DevDiscovery(cordova.getActivity()) {
+            DevDiscovery task = new DevDiscovery(cordova.getActivity(),callbackContext) {
                 @Override
                 protected void onPostExecute(HashSet<String> devices) {
                     callbackContext.success("OK");
