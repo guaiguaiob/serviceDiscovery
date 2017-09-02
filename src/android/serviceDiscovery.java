@@ -40,7 +40,7 @@ public class serviceDiscovery extends CordovaPlugin {
         //    HashSet<String> addresses=null;
             Context ctx = cordova.getActivity();
           //  addresses = new HashSet<String>();
-            callbackContext.success("getNetworkServices");
+          
 
             WifiManager wifi = (WifiManager)ctx.getSystemService( ctx.getApplicationContext().WIFI_SERVICE );
 
