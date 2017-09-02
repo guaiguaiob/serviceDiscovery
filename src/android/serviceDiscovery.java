@@ -23,6 +23,7 @@ public class serviceDiscovery extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) throws JSONException {
+         callbackContext.success(action);
         if (action.equals("getNetworkServices")) {
             callbackContext.success("getNetworkServices");
             JSONObject options = new JSONObject();
