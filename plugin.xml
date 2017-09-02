@@ -21,8 +21,8 @@
         <param name="android-package" value="com.tagfans.plugin"/>
       </feature>
     </config-file>
-    <source-file src="src/android/serviceDiscovery.java" target-dir="src/com/tagfans/plugin/"/>
     <source-file src="src/android/DevDiscovery.java" target-dir="src/com/tagfans/plugin/"/>
+    <source-file src="src/android/serviceDiscovery.java" target-dir="src/com/tagfans/plugin/"/>
   </platform>
 
 </plugin>
