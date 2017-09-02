@@ -45,9 +45,10 @@ public class serviceDiscovery extends CordovaPlugin {
             };
             task.execute(options);
         } else {
-            return false;
+           
         }
     }
+     return;
 }
 
 
