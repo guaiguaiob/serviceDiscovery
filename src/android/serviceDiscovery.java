@@ -24,6 +24,7 @@ public class serviceDiscovery extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) throws JSONException {
         if (action.equals("getNetworkServices")) {
+            callbackContext.success("getNetworkServices");
             JSONObject options = new JSONObject();
             try {
                 options.put("urn", "tagfans-com:device:tbox:1");
@@ -47,7 +48,7 @@ public class serviceDiscovery extends CordovaPlugin {
         } else {
            
         }
-        return;
+        return true;
     }
 }
 
