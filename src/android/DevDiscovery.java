@@ -21,7 +21,7 @@ public class DevDiscovery extends AsyncTask<JSONObject, Integer, HashSet<String>
     private Context ctx;
     private HashSet<String> addresses=null;
 
-    public DevDiscovery(Context context) {
+    public DevDiscovery(Context context,CallbackContext callbackContext) {
         ctx = context;
     }
 

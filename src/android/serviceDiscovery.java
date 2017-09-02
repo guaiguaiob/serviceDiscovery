@@ -25,7 +25,6 @@ public class serviceDiscovery extends CordovaPlugin {
     public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) throws JSONException {
 
         if (action.equals("getNetworkServices")) {
-            callbackContext.success("getNetworkServices");
             JSONObject options = new JSONObject();
             try {
                 options.put("urn", "tagfans-com:device:tbox:1");
@@ -33,13 +32,8 @@ public class serviceDiscovery extends CordovaPlugin {
             } catch(Exception e) {
                 e.printStackTrace();
               }
-              /*
+              
             DevDiscovery task = new DevDiscovery(cordova.getActivity()) {
-                @Override
-                protected void onProgressUpdate(Integer... values) {
-                    callbackContext.success("OK");
-                }
-
                 @Override
                 protected void onPostExecute(HashSet<String> devices) {
                     callbackContext.success("OK");
@@ -47,7 +41,6 @@ public class serviceDiscovery extends CordovaPlugin {
 
             };
             task.execute(options);
-            */
         } 
         return true;
     }
