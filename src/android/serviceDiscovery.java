@@ -34,8 +34,7 @@ public class serviceDiscovery extends CordovaPlugin {
         if (action.equals("getNetworkServices")) {
                 JSONObject options = new JSONObject();
                 try {
-                    options.put("urn", "tagfans-com:device:tbox:1");
-                    options.put("time", 10);
+					options.put("protocol", "ip-scan");
                 } catch(Exception e) {
                     return false;
                 }
