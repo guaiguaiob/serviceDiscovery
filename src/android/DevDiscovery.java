@@ -21,7 +21,7 @@ public class DevDiscovery extends AsyncTask<JSONObject, Integer, HashSet<String>
     private Context ctx;
     private HashSet<String> addresses=null;
 
-    public DevDiscovery(Context context,CallbackContext callbackContext) {
+    public DevDiscovery(Context context) {
         ctx = context;
     }
 
@@ -30,7 +30,7 @@ public class DevDiscovery extends AsyncTask<JSONObject, Integer, HashSet<String>
         int searchTime = 3; //seconds
         String urn = "ssdp:all";
 
-        addresses = new HashSet<String>();
+        addresses = new HashSet<>();
         JSONObject options = params[0];
         try {
             if(options.has("urn")) {

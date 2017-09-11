@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 
 import java.net.DatagramPacket;
@@ -29,88 +28,47 @@ import java.net.UnknownHostException;
 
 
 public class serviceDiscovery extends CordovaPlugin {
-
     @Override
     public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) throws JSONException {
 
         if (action.equals("getNetworkServices")) {
-            String urn = "urn:tagfans-com:device:tbox:1";
-            String address = "";
-            int searchTime = 10;     
-        //    HashSet<String> addresses=null;
-            Context ctx = cordova.getActivity();
-          //  addresses = new HashSet<String>();
-          
-
-            WifiManager wifi = (WifiManager)ctx.getSystemService( ctx.getApplicationContext().WIFI_SERVICE );
-
-            if(wifi != null) {
-
-                WifiManager.MulticastLock lock = wifi.createMulticastLock("The Lock");
-                lock.acquire();
-
-                DatagramSocket socket = null;
-
+                JSONObject options = new JSONObject();
                 try {
+                    options.put("urn", "tagfans-com:device:tbox:1");
+                    options.put("time", 10);
+                } catch(Exception e) {
+                    return;
+                }
 
-                    InetAddress group = InetAddress.getByName("239.255.255.250");
-                    int port = 1900;
-                    String query =
-                            "M-SEARCH * HTTP/1.1\r\n" +
-                                    "HOST: 239.255.255.250:1900\r\n"+
-                                    "MAN: \"ssdp:discover\"\r\n"+
-                                    "MX: 1\r\n"+
-                                    "ST: "+urn+"\r\n"+
-                                    "\r\n";
-                   
-                    socket = new DatagramSocket(port);
-                    socket.setReuseAddress(true);
-                    socket.setSoTimeout(200);
 
-                    DatagramPacket dgram = new DatagramPacket(query.getBytes(), query.length(),
-                            group, port);
-                    socket.send(dgram);
-
-                    long time = System.currentTimeMillis();
-                    long curTime = System.currentTimeMillis();
-      
-                    searchTime = searchTime*1000;
-
-                    while (true) {
-                        DatagramPacket p = new DatagramPacket(new byte[12], 12);
-                        try {
-                            socket.receive(p);
-                            String s = new String(p.getData(), 0, p.getLength());
-                            if (s.toUpperCase().equals("HTTP/1.1 200")) {
-                                address = (address.equals("")) ? p.getAddress().getHostAddress() : address + "," + p.getAddress().getHostAddress();
-                                //addresses.add(p.getAddress().getHostAddress());
-                            }
-                        } catch(java.net.SocketTimeoutException e) {
-                            //continue;
-                        }
-
-                        curTime = System.currentTimeMillis();
-                        long diff = curTime - time;
-
-                        if(diff >= searchTime) {
-                            break;
-                        }
+                DevDiscovery task = new DevDiscovery(cordova.getActivity()) {
+                    @Override
+                    protected void onProgressUpdate(Integer... values) {
+						callbackContext.success(showResult(this.getDevices()));
                     }
 
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                finally {
-                    socket.close();
-                }
-                lock.release();
-            }
-            callbackContext.success(address);
+                    @Override
+                    protected void onPostExecute(HashSet<String> devices) {
+						callbackContext.success(showResult(devices));
+                    }
+
+                };
+                task.execute(options);
+				
         } 
         return true;
     }
+	
+	private void showResult(HashSet<String> devices) {
+        String res = "";
+        if(devices!=null && devices.size()>=0) {
+            for(String dev:devices) {
+                res = (res) ? res+","+dev : dev; 
+            }
+        }     
+		return res;
+    }
+
 }
 
 
