@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.text.TextUtils;
-
 import org.apache.cordova.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,21 +43,16 @@ public class serviceDiscovery extends CordovaPlugin {
 
                 DevDiscovery task = new DevDiscovery(cordova.getActivity()) {
                     @Override
-                    protected void onProgressUpdate(Integer... values) {
-						callbackContext.success(TextUtils.join(",", devices));
-                    }
-
-                    @Override
                     protected void onPostExecute(HashSet<String> devices) {
 						callbackContext.success(TextUtils.join(",", devices));
                     }
-
                 };
                 task.execute(options);
 				
         } 
         return true;
     }
+	
 
 }
 
