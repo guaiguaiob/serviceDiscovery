@@ -59,7 +59,7 @@ public class serviceDiscovery extends CordovaPlugin {
         return true;
     }
 	
-	private void showResult(HashSet<String> devices) {
+	private String showResult(HashSet<String> devices) {
         String res = "";
         if(devices!=null && devices.size()>=0) {
             for(String dev:devices) {
