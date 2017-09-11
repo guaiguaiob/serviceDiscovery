@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
+import android.text.TextUtils;
 
 import org.apache.cordova.*;
 import org.json.JSONArray;
@@ -44,12 +45,12 @@ public class serviceDiscovery extends CordovaPlugin {
                 DevDiscovery task = new DevDiscovery(cordova.getActivity()) {
                     @Override
                     protected void onProgressUpdate(Integer... values) {
-						callbackContext.success(showResult(this.getDevices()));
+						callbackContext.success(TextUtils.join(",", devices));
                     }
 
                     @Override
                     protected void onPostExecute(HashSet<String> devices) {
-						callbackContext.success(showResult(devices));
+						callbackContext.success(TextUtils.join(",", devices));
                     }
 
                 };
@@ -58,19 +59,11 @@ public class serviceDiscovery extends CordovaPlugin {
         } 
         return true;
     }
-	
-	private String showResult(HashSet<String> devices) {
-        String res = "";
-        if(devices!=null && devices.size()>=0) {
-            for(String dev:devices) {
-                res = (res) ? res+","+dev : dev; 
-            }
-        }     
-		return res;
-    }
 
 }
 
 
     
+
+
 
