@@ -1,4 +1,4 @@
-package com.tagfans.tboxfinder;
+package com.tagfans.plugin;
 
 import android.content.Context;
 import android.net.wifi.WifiInfo;
