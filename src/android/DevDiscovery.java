@@ -1,5 +1,4 @@
-package com.tagfans.plugin;
-
+package com.tagfans.tboxfinder;
 
 import android.content.Context;
 import android.net.wifi.WifiInfo;
@@ -25,11 +24,17 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 
+import static android.os.SystemClock.sleep;
+
 public class DevDiscovery extends AsyncTask<JSONObject, Integer, HashSet<String>> {
     final static String TAG = "DevDiscovery";
     final static int MAX_TIME = 30;//seconds
     private Context ctx;
     private HashSet<String> addresses=null;
+    private int ipCount;
+    private String cntSync = "cntSync";
+    private String thdSync = "thdSync";
+    private int waitingCount;
 
     public DevDiscovery(Context context) {
         ctx = context;
@@ -61,7 +66,80 @@ public class DevDiscovery extends AsyncTask<JSONObject, Integer, HashSet<String>
             return doSSDP(options);
         }
     }
+
+    private HashSet<String> doScan(final String ipPrefix, final int start, final int end) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = start; i <= end; i++) {
+                    String testIp = ipPrefix + i;
+                    Socket socket = new Socket();
+                    try {
+                        socket.connect(new InetSocketAddress(testIp, 14444), 50);
+                        socket.setSoTimeout(1000);
+
+                        DataOutputStream output = null;
+                        DataInputStream input = null;
+
+                        output = new DataOutputStream(socket.getOutputStream());
+
+                        OutputStream outstream = socket.getOutputStream();
+                        PrintWriter out = new PrintWriter(outstream);
+                        String toSend = "{\"cmd\":\"ping\"}";
+                        out.print(toSend);
+                        out.flush();
+
+                        InputStream instrem = socket.getInputStream();
+                        StringBuilder sb = new StringBuilder();
+
+                        int c;
+
+                        while (((c = instrem.read()) >= 0) && (c != 0x0a /* <LF> */)) {
+                            if (c != 0x0d /* <CR> */) {
+                                sb.append((char) c);
+                            } else {
+                                // Ignore <CR>.
+                            }
+                            Log.d(TAG, sb.toString());
+                        }
+                        JSONObject jo = new JSONObject(sb.toString());
+                        if ("pong".equals(jo.getString("result"))) {
+                            synchronized (addresses) {
+                                addresses.add(testIp);
+                            }
+                        }
+                        socket.close();
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        Log.d(TAG, testIp + " failed");
+                    }
+                    int percentage;
+                    synchronized(cntSync) {
+                        ipCount++;
+                        percentage = (int) Math.ceil(ipCount * 100 / 255);
+                    }
+                    Log.d(TAG, "" + percentage);
+                    publishProgress(percentage);
+                }
+                synchronized (thdSync) {
+                    waitingCount--;
+                }
+            }
+        }).start();
+
+        return addresses;
+    }
+
     private HashSet<String> doScan(JSONObject options) {
+        ipCount = 0;
+        int thdCount = 3;
+        if(options.has("threads")) {
+            try {
+                thdCount = options.getInt("threads");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         WifiManager wifiMgr = (WifiManager)ctx.getSystemService( ctx.getApplicationContext().WIFI_SERVICE );
         WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
         int ip = wifiInfo.getIpAddress();
@@ -70,52 +148,28 @@ public class DevDiscovery extends AsyncTask<JSONObject, Integer, HashSet<String>
         String ip3 = ipAddress.substring(0, ipAddress.lastIndexOf('.')+1);
         Log.d(TAG, ip3);
 
-        for(int i=0; i<256; i++) {
-            String testIp = ip3+i;
-            Socket socket=new Socket();
-            try {
-                socket.connect(new InetSocketAddress(testIp,14444), 50);
-                socket.setSoTimeout(1000);
+        //ip3 = "10.0.0.";
 
-                DataOutputStream output = null;
-                DataInputStream input = null;
+        waitingCount=0;
 
-                output = new DataOutputStream( socket.getOutputStream() );
-
-
-                OutputStream outstream = socket.getOutputStream();
-                PrintWriter out = new PrintWriter(outstream);
-                String toSend = "{\"cmd\":\"ping\"}";
-                out.print(toSend);
-                out.flush();
-
-                InputStream instrem = socket.getInputStream();
-                StringBuilder sb = new StringBuilder();
-
-                int c;
-
-                while ( (( c = instrem.read() ) >= 0) && (c != 0x0a /* <LF> */) ) {
-                    if ( c != 0x0d /* <CR> */ ) {
-                        sb.append( (char)c );
-                    } else {
-                        // Ignore <CR>.
-                    }
-                    Log.d(TAG, sb.toString());
-                }
-                JSONObject jo = new JSONObject(sb.toString());
-                if("pong".equals(jo.getString("result")))
-                    addresses.add(testIp);
-                socket.close();
-            } catch (Exception e) {
-                //e.printStackTrace();
-                Log.d(TAG, testIp + " failed");
+        int start = 1, end = 0;
+        for(int i=1; i<thdCount; i++) {
+            end = 255*i/thdCount;
+            synchronized (thdSync) {
+                waitingCount++;
             }
-            int percentage = (int)Math.ceil(i*100/255);
-            Log.d(TAG, ""+percentage);
-            publishProgress(percentage);
+            doScan(ip3, start, end);
+            start = end+1;
         }
 
-        Log.d(TAG, ip3);
+        synchronized (thdSync) {
+            waitingCount++;
+        }
+        doScan(ip3, start, 255);
+
+        while(waitingCount>0) {
+            sleep(500);
+        }
 
         return addresses;
     }
