@@ -35,6 +35,7 @@ public class serviceDiscovery extends CordovaPlugin {
                 JSONObject options = new JSONObject();
                 try {
 					options.put("protocol", "ip-scan");
+					options.put("threads", 10);
                 } catch(Exception e) {
                     return false;
                 }
